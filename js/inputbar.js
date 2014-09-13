@@ -147,6 +147,7 @@ weechat.directive('inputBar', function() {
 
                 // Support different browser quirks
                 var code = $event.keyCode ? $event.keyCode : $event.charCode;
+                var keydown = $event.type === "keydown";
 
                 // any other key than Tab resets nick completion iteration
                 var tmpIterCandidate = $scope.iterCandidate;
@@ -194,7 +195,7 @@ weechat.directive('inputBar', function() {
                 // Alt+A -> switch to buffer with activity
                 if ($event.altKey && (code === 97 || code === 65)) {
                     $event.preventDefault();
-                    $rootScope.switchToActivityBuffer();
+                    models.switchToActivityBuffer();
                     return true;
                 }
 
@@ -206,14 +207,23 @@ weechat.directive('inputBar', function() {
                     return true;
                 }
 
-                // Alt+< -> switch to previous buffer
+                // Alt+< -> go back in history
                 if ($event.altKey && (code === 60 || code === 226)) {
-                    var previousBuffer = models.getPreviousBuffer();
-                    if (previousBuffer) {
-                        models.setActiveBuffer(previousBuffer.id);
-                        $event.preventDefault();
-                        return true;
-                    }
+                    $event.preventDefault();
+                    return models.switchToPrevNextBuffer(false);
+                }
+
+                // Alt+> -> go forward in history
+                // TODO alternative codes for cross-browser stuff
+                if ($event.altKey && code === 62) {
+                    $event.preventDefault();
+                    return models.switchToPrevNextBuffer(true);
+                }
+
+                // Alt+/ -> switch to previous buffer
+                if ($event.altKey && code === 47) {
+                    $event.preventDefault();
+                    return models.switchToLastBuffer();
                 }
 
                 // Double-tap Escape -> disconnect
@@ -252,7 +262,7 @@ weechat.directive('inputBar', function() {
                 var caretPos;
 
                 // Arrow up -> go up in history
-                if ($event.type === "keydown" && code === 38 && document.activeElement === inputNode) {
+                if (keydown && code === 38 && document.activeElement === inputNode) {
                     caretPos = inputNode.selectionStart;
                     if ($scope.command.slice(0, caretPos).indexOf("\n") !== -1) {
                         return false;
@@ -269,7 +279,7 @@ weechat.directive('inputBar', function() {
                 }
 
                 // Arrow down -> go down in history
-                if ($event.type === "keydown" && code === 40 && document.activeElement === inputNode) {
+                if (keydown && code === 40 && document.activeElement === inputNode) {
                     caretPos = inputNode.selectionStart;
                     if ($scope.command.slice(caretPos).indexOf("\n") !== -1) {
                         return false;
