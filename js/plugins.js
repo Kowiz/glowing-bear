@@ -169,7 +169,6 @@ plugins.factory('userPlugins', function() {
      * See: https://developer.spotify.com/technologies/widgets/spotify-play-button/
      *
      */
-
     var spotifyPlugin = new Plugin(function(message) {
         var content = [];
         var addMatch = function(match) {
@@ -256,6 +255,10 @@ plugins.factory('userPlugins', function() {
         urlPlugin(function(url) {
             var embed = false;
             // Check the get parameters as well, they might contain an image to load
+                if (url.match(/^https?:\/\/(i\.)?imgur\.com\//i)) {
+			url = url.concat(".jpg");
+			
+		}
             var segments = url.split(/[?&]/).forEach(function(param) {
                 if (param.match(/\.(png|gif|jpg|jpeg)$/i)) {
                     embed = true;
