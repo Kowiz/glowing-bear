@@ -285,6 +285,7 @@ weechat.controller('WeechatCtrl', ['$rootScope', '$scope', '$store', '$timeout',
     $store.bind($scope, "showtimestampSeconds", false);
     // Save setting for playing sound on notification
     $store.bind($scope, "soundnotification", false);
+    $store.bind($scope, "inputbarfocusontab", false);
     // Save setting for font family
     $store.bind($scope, "fontfamily");
     // Save setting for theme
@@ -301,7 +302,11 @@ weechat.controller('WeechatCtrl', ['$rootScope', '$scope', '$store', '$timeout',
             $scope.fontfamily = "Inconsolata, Consolas, Monaco, Ubuntu Mono, monospace";
         }
     }
-
+ 	if($scope.inputbarfocusontab){
+		window.addEventListener("focus", function() {
+			document.getElementById('sendMessage').focus();
+		}, false);
+	}
     // Save setting for displaying embeds in rootScope so it can be used from service
     $rootScope.auto_display_embedded_content = $scope.noembed === false;
 
