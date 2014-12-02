@@ -281,6 +281,38 @@ plugins.factory('userPlugins', function() {
     );
     imagePlugin.name = 'image';
 
+
+    /*
+     * Audio Preview
+     */
+    var audioPlugin = new Plugin(
+        urlPlugin(function(url) {
+            var embed = false;
+		var ogg = false;
+		var wav = false;
+		var mp3 = false;
+            // Check the get parameters as well, they might contain an image to load
+            var segments = url.split(/[?&]/).forEach(function(param) {
+                if (param.match(/\.(ogg)$/i)) {
+                    embed = true;
+		    ogg = true;
+                }else if (param.match(/\.(wav)$/i)) {
+                    embed = true;
+		    wav = true;
+                }else if (param.match(/\.(mp3)$/i)) {
+                    embed = true;
+		    mp3 = true;
+		}
+            });
+            if (embed) {
+		if(ogg)	return '<audio controls><source src="'+url+'" type="audio/ogg"></audio>';
+		else if(wav) return '<audio controls><source src="'+url+'" type="audio/wav"></audio>';
+		else if(mp3) return '<audio controls><source src="'+url+'" type="audio/mpeg"></audio>';
+            }
+        })
+    );
+    audioPlugin.name = 'audio';
+
     /*
      * Cloud Music Embedded Players
      */
@@ -394,7 +426,7 @@ plugins.factory('userPlugins', function() {
     tweetPlugin.name = 'Tweet';
 
     return {
-        plugins: [youtubePlugin, dailymotionPlugin, allocinePlugin, imagePlugin, spotifyPlugin, cloudmusicPlugin, googlemapPlugin, asciinemaPlugin, yrPlugin, gistPlugin, tweetPlugin]
+        plugins: [youtubePlugin, dailymotionPlugin, allocinePlugin, imagePlugin, spotifyPlugin, cloudmusicPlugin, googlemapPlugin, asciinemaPlugin, yrPlugin, gistPlugin, tweetPlugin, audioPlugin]
     };
 
 
