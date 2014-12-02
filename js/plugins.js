@@ -257,7 +257,6 @@ plugins.factory('userPlugins', function() {
             // Check the get parameters as well, they might contain an image to load
                 if (url.match(/^https?:\/\/(i\.)?imgur\.com\//i)) {
 			url = url.concat(".jpg");
-			
 		}
             var segments = url.split(/[?&]/).forEach(function(param) {
                 if (param.match(/\.(png|gif|jpg|jpeg)$/i)) {
