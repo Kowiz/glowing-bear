@@ -257,7 +257,12 @@ plugins.factory('userPlugins', function() {
             // Check the get parameters as well, they might contain an image to load
                 if (url.match(/^https?:\/\/(i\.)?imgur\.com\//i)) {
 			url = url.concat(".jpg");
+		}else if (url.match(/^https?:\/\/pbs\.twimg\.com\//i)) {
+			if(url.indexOf(":",6) != -1){
+				url = url.substring(0,url.indexOf(":",6));
+			}
 		}
+
             var segments = url.split(/[?&]/).forEach(function(param) {
                 if (param.match(/\.(png|gif|jpg|jpeg)$/i)) {
                     embed = true;
